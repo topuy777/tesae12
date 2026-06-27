@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GA-VR // REBUILDR MATRIX v2.0</title>
+    <title>GA-VR // REBUILDR MATRIX v2.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -321,8 +321,10 @@
         }
 
         .btn-center-container {
-            text-align: center;
-            max-width: 1450px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            max-width: 600px;
             margin: 25px auto 0 auto;
         }
 
@@ -509,38 +511,66 @@
     </div>
     
     <div style="grid-column: 1 / -1;" class="btn-center-container">
-        <button class="btn-cyber btn-core" style="max-width: 400px; margin: 0 auto;" onclick="prosesDataAkurat()">BANDINGKAN KEDUA DATA</button>
+        <button class="btn-cyber btn-core" onclick="prosesDataAkurat()">BANDINGKAN KEDUA DATA</button>
+        <button class="btn-cyber btn-refresh" onclick="resetDuplicateMenu()">🔄 REFRESH DATA</button>
     </div>
 </div>
 
 <script>
-const kataBukanID = new Set([
-    'tanggal', 'terima', 'user', 'action', 'dari', 'tujuan', 'jumlah', 
-    'status', 'operator', 'withdraw', 'accept', 'jyqaaautowd', 'point', 
-    'dana', 'gopay', 'bca', 'ovo', 'seabank', 'bankjago', 'id', 'no', 'nama',
-    'bank', 'jago'
-]);
+function hitungDaftarID(teksMentah) {
+    const petaID = new Map();
+    if (!teksMentah.trim()) return petaID;
 
-function ekstrakDaftarID(teksMentah) {
-    const kumpulanID = new Set();
-    if (!teksMentah.trim()) return kumpulanID;
+    const regexJam = /\b\d{1,2}:\d{2}:\d{2}/g;
+    
+    let match;
+    let posisiJam = [];
+    while ((match = regexJam.exec(teksMentah)) !== null) {
+        posisiJam.push({
+            indexMulai: match.index,
+            indexTeks: match.index + match[0].length
+        });
+    }
 
-    const baris = teksMentah.split('\n');
-    baris.forEach(line => {
-        const kataKata = line.split(/[\s,]+/);
+    if (posisiJam.length === 0) {
+        const kataKata = teksMentah.split(/[\s,]+/);
         kataKata.forEach(k => {
             let idClean = k.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO)/i)[0];
             idClean = idClean.replace(/[^a-zA-Z0-9]/g, '').trim();
-            
             if (idClean.length >= 3 && isNaN(idClean)) {
                 let idLower = idClean.toLowerCase();
-                if (!kataBukanID.has(idLower)) {
-                    kumpulanID.add(idClean); 
-                }
+                if (petaID.has(idLower)) { petaID.get(idLower).count += 1; } 
+                else { petaID.set(idLower, { originalCase: idClean, count: 1 }); }
             }
         });
-    });
-    return kumpulanID;
+        return petaID;
+    }
+
+    for (let i = 0; i < posisiJam.length; i++) {
+        let mulai = posisiJam[i].indexTeks;
+        let selesai = (posisiJam[i+1]) ? posisiJam[i+1].indexMulai : teksMentah.length;
+        
+        let blokTeks = teksMentah.substring(mulai, selesai).trim();
+        let kataPertama = blokTeks.split(/[\s,]+/)[0];
+        let idClean = kataPertama.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO)/i)[0];
+        
+        let cekKapital = idClean.match(/([a-z0-9]+)([A-Z])/);
+        if (cekKapital) {
+            idClean = cekKapital[1]; 
+        }
+
+        idClean = idClean.replace(/[^a-zA-Z0-9]/g, '').trim();
+
+        if (idClean.length >= 3 && isNaN(idClean)) {
+            let idLower = idClean.toLowerCase();
+            if (petaID.has(idLower)) {
+                petaID.get(idLower).count += 1;
+            } else {
+                petaID.set(idLower, { originalCase: idClean, count: 1 });
+            }
+        }
+    }
+    return petaID;
 }
 
 function prosesDataAkurat() {
@@ -556,49 +586,51 @@ function prosesDataAkurat() {
     hasilDiv.innerHTML = "<em style='color: var(--neon-gold);'>Sedang menyaring data secara presisi...</em>";
 
     setTimeout(() => {
-        const listIDKolom1 = ekstrakDaftarID(txtData1);
-        const listIDKolom2 = ekstrakDaftarID(txtData2);
+        const mapKolom1 = hitungDaftarID(txtData1);
+        const mapKolom2 = hitungDaftarID(txtData2);
 
-        const lowerKolom1 = new Set([...listIDKolom1].map(v => v.toLowerCase()));
-        const lowerKolom2 = new Set([...listIDKolom2].map(v => v.toLowerCase()));
+        let listEror = [];
+        const semuaIDUnik = new Set([...mapKolom1.keys(), ...mapKolom2.keys()]);
 
-        let hanyaDiKolom1 = [];
-        let hanyaDiKolom2 = [];
+        semuaIDUnik.forEach(idLower => {
+            const data1 = mapKolom1.get(idLower);
+            const data2 = mapKolom2.get(idLower);
 
-        listIDKolom1.forEach(id => {
-            if (!lowerKolom2.has(id.toLowerCase())) {
-                hanyaDiKolom1.push(id);
+            const count1 = data1 ? data1.count : 0;
+            const count2 = data2 ? data2.count : 0;
+            const namaID = data1 ? data1.originalCase : data2.originalCase;
+
+            if (count1 !== count2) {
+                if (count1 > 0 && count2 === 0) {
+                    listEror.push({ id: namaID, tipe: `Hanya ada di Kolom 1 (${count1} kali), TIDAK ADA di Kolom 2.` });
+                } else if (count2 > 0 && count1 === 0) {
+                    listEror.push({ id: namaID, tipe: `Hanya ada di Kolom 2 (${count2} kali), TIDAK ADA di Kolom 1.` });
+                } else {
+                    listEror.push({ id: namaID, tipe: `Jumlah tidak sama! Di Kolom 1 ada ${count1}, sedangkan di Kolom 2 ada ${count2}.` });
+                }
             }
         });
 
-        listIDKolom2.forEach(id => {
-            if (!lowerKolom1.has(id.toLowerCase())) {
-                hanyaDiKolom2.push(id);
-            }
-        });
-
-        if (hanyaDiKolom1.length === 0 && hanyaDiKolom2.length === 0) {
-            hasilDiv.innerHTML = "<span class='success-msg'>✅ Sempurna! Kedua data memiliki daftar User ID yang sama utuh.</span>";
+        if (listEror.length === 0) {
+            hasilDiv.innerHTML = "<span class='success-msg'>✅ Sempurna! Kedua data memiliki daftar User ID dan JUMLAH kuantitas yang sama utuh.</span>";
             return;
         }
 
-        let htmlHasil = "";
-        if (hanyaDiKolom1.length > 0) {
-            htmlHasil += `<div class='section-title'>⚠️ Ada di Kolom 1, tapi TIDAK ADA di Kolom 2 (${hanyaDiKolom1.length} ID):</div>`;
-            hanyaDiKolom1.forEach(id => {
-                htmlHasil += "<div class='missing-item'>❌ " + id + "</div>";
-            });
-        }
-
-        if (hanyaDiKolom2.length > 0) {
-            htmlHasil += `<div class='section-title'>⚠️ Ada di Kolom 2, tapi TIDAK ADA di Kolom 1 (${hanyaDiKolom2.length} ID):</div>`;
-            hanyaDiKolom2.forEach(id => {
-                htmlHasil += "<div class='missing-item'>❌ " + id + "</div>";
-            });
-        }
+        let htmlHasil = `<div class='section-title'>⚠️ Ditemukan ${listEror.length} Masalah Ketidakcocokan:</div>`;
+        listEror.forEach(err => {
+            htmlHasil += `<div class='missing-item'>❌ <strong>${err.id}</strong> -> ${err.tipe}</div>`;
+        });
 
         hasilDiv.innerHTML = htmlHasil;
     }, 50);
+}
+
+// Fungsi Baru: Mereset isi menu data Duplicate WD
+function resetDuplicateMenu() {
+    document.getElementById('data1').value = "";
+    document.getElementById('data2').value = "";
+    document.getElementById('hasil').className = "no-data";
+    document.getElementById('hasil').innerHTML = "Klik tombol analisa di bawah untuk menyaring data...";
 }
 
 function switchNav(target) {
