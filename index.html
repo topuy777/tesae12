@@ -8,11 +8,11 @@
     <style>
         :root {
             --neon-gold: #ffc83b;
-            --cyber-amber: #ff9900;
+            --cyber-amber: #ff6600;
             --dark-core: #050402;
-            --panel-bg: rgba(15, 12, 8, 0.88);
-            --border-glow: rgba(255, 200, 59, 0.3);
-            --text-neon: #fff5db;
+            --panel-bg: rgba(25, 5, 5, 0.85); 
+            --border-glow: rgba(255, 51, 102, 0.25);
+            --text-neon: #ffebeb;
             --success-cyan: #00f3ff;
             --cyber-red: #ff3366;
             --font-header: 'Orbitron', sans-serif;
@@ -27,22 +27,41 @@
         body {
             margin: 0;
             padding: 25px;
-            background: radial-gradient(circle at 50% 10%, #1e1404 0%, #030201 100%);
+            background: linear-gradient(-45deg, #1a0000, #3d0007, #2b0004, #4d0a12);
+            background-size: 400% 400%;
+            animation: cyberGradient 15s ease infinite;
             font-family: var(--font-body);
             color: var(--text-neon);
             min-height: 100vh;
             letter-spacing: 0.5px;
         }
 
-        /* TOP HUB BAR */
+        @keyframes cyberGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .brand-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             max-width: 1450px;
             margin: 0 auto 25px auto;
-            border-bottom: 2px dashed rgba(255, 200, 59, 0.2);
+            border-bottom: 2px dashed rgba(255, 51, 102, 0.2);
             padding-bottom: 15px;
+        }
+
+        .brand-logo-zone {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255, 200, 59, 0.5));
         }
 
         .brand-title {
@@ -50,10 +69,49 @@
             font-weight: 900;
             font-size: 1.8rem;
             text-transform: uppercase;
-            background: linear-gradient(90deg, var(--neon-gold), #ffffff);
+            background: linear-gradient(90deg, var(--neon-gold), #ffffff, var(--cyber-red));
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 200, 59, 0.3);
+            animation: textShine 4s linear infinite;
+            text-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+        }
+
+        @keyframes textShine {
+            to { background-position: 200% center; }
+        }
+
+        .center-menu-hub {
+            display: flex;
+            gap: 15px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .btn-header-menu {
+            background: rgba(255, 51, 102, 0.02);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            color: var(--neon-gold);
+            font-family: var(--font-header);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-header-menu:hover, .btn-header-menu.active {
+            background: linear-gradient(135deg, var(--cyber-red), var(--cyber-amber));
+            color: #fff;
+            box-shadow: 0 0 20px var(--cyber-red);
+            border-color: transparent;
+            transform: translateY(-1px);
         }
 
         .right-hub {
@@ -62,17 +120,15 @@
             gap: 15px;
         }
 
-        /* LIVE CLOCK COMPONENT */
         .live-clock {
             font-family: var(--font-header);
             font-size: 0.9rem;
             color: var(--neon-gold);
-            background: rgba(255, 200, 59, 0.05);
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-glow);
             padding: 6px 16px;
             border-radius: 6px;
-            text-shadow: 0 0 8px rgba(255, 200, 59, 0.4);
-            box-shadow: inset 0 0 10px rgba(255, 200, 59, 0.05);
+            box-shadow: inset 0 0 10px rgba(255, 51, 102, 0.1);
         }
 
         .system-status {
@@ -83,11 +139,15 @@
             padding: 5px 12px;
             border-radius: 6px;
             background: rgba(0, 243, 255, 0.05);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+            animation: pulseCyan 2s infinite alternate;
             text-transform: uppercase;
         }
 
-        /* LAYOUT DASHBOARD */
+        @keyframes pulseCyan {
+            0% { box-shadow: 0 0 5px rgba(0, 243, 255, 0.2); }
+            100% { box-shadow: 0 0 15px rgba(0, 243, 255, 0.6); }
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 460px 1fr;
@@ -96,27 +156,46 @@
             margin: 0 auto;
         }
 
-        @media (max-width: 1150px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+        .duplicate-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1450px;
+            margin: 0 auto;
         }
 
-        /* LUXURY PANELS */
+        @media (max-width: 1150px) {
+            .dashboard-grid, .duplicate-grid { grid-template-columns: 1fr; }
+        }
+
         .cyber-panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-glow);
             border-radius: 14px;
             padding: 25px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 45px rgba(0,0,0,0.95), inset 0 0 20px rgba(255, 200, 59, 0.03);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             position: relative;
             overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .cyber-panel:hover {
+            border-color: rgba(255, 51, 102, 0.5);
         }
 
         .cyber-panel::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--neon-gold), transparent);
+            top: 0; left: -100%; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyber-red), transparent);
+            animation: lineFlow 6s linear infinite;
+        }
+
+        @keyframes lineFlow {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
         }
 
         .panel-title {
@@ -131,28 +210,54 @@
             gap: 10px;
         }
 
-        /* TEXTAREA CONTROLLER */
+        label {
+            font-family: var(--font-header);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon-gold);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
         textarea {
             width: 100%;
             height: 380px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 200, 59, 0.12);
+            background: rgba(15, 2, 2, 0.9);
+            border: 1px solid rgba(255, 51, 102, 0.15);
             border-radius: 8px;
             padding: 15px;
             color: #fff;
             font-family: monospace;
             font-size: 0.9rem;
             resize: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.9);
         }
 
         textarea:focus {
-            border-color: var(--neon-gold);
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.8), 0 0 15px rgba(255, 200, 59, 0.15);
+            border-color: var(--cyber-red);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.9), 0 0 15px rgba(255, 51, 102, 0.2);
         }
 
-        /* PREMIUM BUTTON SYSTEM */
+        #hasil {
+            background: rgba(15, 2, 2, 0.9);
+            border: 1px solid rgba(255, 51, 102, 0.15);
+            height: 380px;
+            overflow-y: auto;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            box-sizing: border-box;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.9);
+        }
+
+        .no-data {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
         .action-stack {
             display: flex;
             flex-direction: column;
@@ -171,7 +276,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -179,15 +284,16 @@
         }
 
         .btn-core {
-            background: linear-gradient(135deg, var(--cyber-amber), var(--neon-gold));
-            color: #000;
-            box-shadow: 0 4px 20px rgba(255, 153, 0, 0.25);
+            background: linear-gradient(135deg, var(--cyber-red), var(--neon-gold));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.2);
         }
 
         .btn-core:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 200, 59, 0.45);
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.5);
             background: linear-gradient(135deg, #fff, var(--neon-gold));
+            color: #000;
         }
 
         .btn-sec {
@@ -197,25 +303,29 @@
         }
 
         .btn-sec:hover {
-            background: rgba(255, 200, 59, 0.08);
+            background: rgba(255, 200, 59, 0.1);
             color: #fff;
             box-shadow: 0 0 15px rgba(255, 200, 59, 0.2);
         }
 
-        /* NEW REFRESH BUTTON */
         .btn-refresh {
             background: transparent;
-            border: 1px solid var(--cyber-red);
-            color: var(--cyber-red);
+            border: 1px solid var(--cyber-amber);
+            color: var(--cyber-amber);
         }
 
         .btn-refresh:hover {
-            background: rgba(255, 51, 102, 0.1);
+            background: rgba(255, 102, 0, 0.1);
             color: #fff;
-            box-shadow: 0 0 15px rgba(255, 51, 102, 0.25);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
         }
 
-        /* RESPONSIVE DISPLAY SIDE */
+        .btn-center-container {
+            text-align: center;
+            max-width: 1450px;
+            margin: 25px auto 0 auto;
+        }
+
         .output-wrapper {
             display: flex;
             flex-direction: column;
@@ -223,8 +333,8 @@
         }
 
         .sheet-preview-container {
-            background: #040302;
-            border: 1px solid rgba(255,255,255,0.03);
+            background: #0d0101;
+            border: 1px solid rgba(255,255,255,0.02);
             border-radius: 8px;
             padding: 15px;
             font-family: monospace;
@@ -234,26 +344,24 @@
             height: 140px;
             overflow-y: auto;
             border-left: 4px solid var(--success-cyan);
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.9);
         }
 
-        /* DATA GRID WORKSPACE */
         .table-scroller {
             overflow-x: auto;
             border-radius: 8px;
-            border: 1px solid rgba(255, 200, 59, 0.08);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 51, 102, 0.08);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95rem;
-            background: rgba(5, 4, 2, 0.7);
+            background: rgba(20, 4, 4, 0.6);
         }
 
         th {
-            background: rgba(22, 17, 10, 0.98);
+            background: rgba(30, 5, 5, 0.95);
             color: var(--neon-gold);
             font-family: var(--font-header);
             font-size: 0.8rem;
@@ -261,24 +369,24 @@
             text-transform: uppercase;
             padding: 15px 18px;
             text-align: left;
-            border-bottom: 2px solid var(--cyber-amber);
+            border-bottom: 2px solid var(--cyber-red);
             letter-spacing: 1px;
         }
 
         td {
             padding: 14px 18px;
-            border-bottom: 1px solid rgba(255, 200, 59, 0.04);
-            color: #dfd0b2;
+            border-bottom: 1px solid rgba(255, 51, 102, 0.03);
+            color: #ffe0e0;
             font-weight: 500;
         }
 
         tr:hover td {
-            background: rgba(255, 200, 59, 0.05);
+            background: rgba(255, 51, 102, 0.06);
             color: #fff;
         }
 
         .td-user { color: #ffffff; font-weight: 700; }
-        .td-bank { color: #cbbba1; }
+        .td-bank { color: #ffcccc; }
         .td-skip { color: rgba(255,255,255,0.12); text-align: center; font-size: 0.8rem; font-weight: bold; }
         .td-nominal {
             color: var(--cyber-red);
@@ -288,26 +396,61 @@
             font-size: 1.05rem;
             text-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
         }
+
+        .section-title {
+            font-family: var(--font-header);
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255, 51, 102, 0.08);
+            border-left: 3px solid var(--cyber-red);
+            border-radius: 4px;
+            color: var(--neon-gold);
+            letter-spacing: 0.5px;
+        }
+        
+        .missing-item {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.05);
+            padding: 6px 12px;
+            margin-bottom: 5px;
+            border-left: 4px solid var(--cyber-red);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .success-msg {
+            color: var(--success-cyan);
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
     </style>
 </head>
 <body>
 
 <div class="brand-header">
-    <div class="brand-title">VAREL PANTEK</div>
+    <div class="brand-logo-zone">
+        <img src="ayutogellogo1.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+        <div class="brand-title">VAREL PANTEK</div>
+    </div>
+    
+    <div class="center-menu-hub">
+        <button id="menuFormWd" class="btn-header-menu active" onclick="switchNav('form-wd')">FORM WD</button>
+        <button id="menuDuplicateWd" class="btn-header-menu" onclick="switchNav('duplicate-wd')">DUPLICATE WD</button>
+    </div>
+
     <div class="right-hub">
         <div id="liveClock" class="live-clock">MEMUAT WAKTU...</div>
         <div class="system-status">ONLINE</div>
     </div>
 </div>
 
-<div class="dashboard-grid">
-    
+<div id="sectionFormWd" class="dashboard-grid">
     <div class="cyber-panel">
-        <div class="panel-title">
-            <span>⚡</span> INPUT DATA TRANSAKSI
-        </div>
+        <div class="panel-title">⚡ INPUT DATA TRANSAKSI</div>
         <textarea id="rawInput" placeholder="Tempelkan log data acak di sini..."></textarea>
-        
         <div class="action-stack">
             <button class="btn-cyber btn-core" onclick="prosesRekap()">EKSTRAK SEKARANG</button>
             <button class="btn-cyber btn-sec" onclick="copyFormatTeks()">SALIN STRUKTUR SHEET</button>
@@ -316,18 +459,13 @@
     </div>
 
     <div class="output-wrapper">
-        
         <div class="cyber-panel">
-            <div class="panel-title" style="color: var(--success-cyan);">
-                <span>📊</span> PREVIEW DATA SALINAN (SPREADSHEET STRUCTURE)
-            </div>
+            <div class="panel-title" style="color: var(--success-cyan);">📊 PREVIEW DATA SALINAN (SPREADSHEET STRUCTURE)</div>
             <pre id="textOutput" class="sheet-preview-container">Menunggu ekstraksi data transaksi...</pre>
         </div>
 
         <div class="cyber-panel">
-            <div class="panel-title">
-                <span>🖥️</span> VISUAL GRID MATRIX (HASIL PASTE TARGET)
-            </div>
+            <div class="panel-title">🖥️ VISUAL GRID MATRIX (HASIL PASTE TARGET)</div>
             <div class="table-scroller">
                 <table>
                     <thead>
@@ -348,122 +486,194 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
 
+<div id="sectionDuplicateWd" class="duplicate-grid" style="display: none;">
+    <div class="cyber-panel">
+        <div class="panel-title">📥 DATA INPUT UTAMA</div>
+        <label for="data1">KOLOM 1:</label>
+        <textarea id="data1" placeholder="Tempel data satu di sini..."></textarea>
     </div>
 
+    <div class="cyber-panel">
+        <div class="panel-title">📥 DATA PEMBANDING</div>
+        <label for="data2">KOLOM 2:</label>
+        <textarea id="data2" placeholder="Tempel data dua di sini..."></textarea>
+    </div>
+
+    <div class="cyber-panel">
+        <div class="panel-title" style="color: var(--neon-gold);">🔍 HASIL ANALISIS</div>
+        <label>KOLOM 3 (FILTER MATRIX SYSTEM):</label>
+        <div id="hasil" class="no-data">Klik tombol analisa di bawah untuk menyaring data...</div>
+    </div>
+    
+    <div style="grid-column: 1 / -1;" class="btn-center-container">
+        <button class="btn-cyber btn-core" style="max-width: 400px; margin: 0 auto;" onclick="prosesDataAkurat()">BANDINGKAN KEDUA DATA</button>
+    </div>
 </div>
 
 <script>
-// FUNCTION LIVE REALTIME CLOCK (Hari, Tanggal Bulan Tahun Jam:Menit:Detik)
-function updateClock() {
-    const now = new Date();
-    
-    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
-    const hari = hariArr[now.getDay()];
-    const tanggal = String(now.getDate()).padStart(2, '0');
-    const bulan = bulanArr[now.getMonth()];
-    const tahun = now.getFullYear();
-    
-    const jam = String(now.getHours()).padStart(2, '0');
-    const menit = String(now.getMinutes()).padStart(2, '0');
-    const detik = String(now.getSeconds()).padStart(2, '0');
-    
-    const formatWaktu = `${hari}, ${tanggal} ${bulan} ${tahun} | ${jam}:${menit}:${detik}`;
-    document.getElementById('liveClock').innerText = formatWaktu;
-}
-setInterval(updateClock, 1000);
-updateClock(); // Jalankan langsung tanpa nunggu 1 detik pertama
+const kataBukanID = new Set([
+    'tanggal', 'terima', 'user', 'action', 'dari', 'tujuan', 'jumlah', 
+    'status', 'operator', 'withdraw', 'accept', 'jyqaaautowd', 'point', 
+    'dana', 'gopay', 'bca', 'ovo', 'seabank', 'bankjago', 'id', 'no', 'nama',
+    'bank', 'jago'
+]);
 
-// FUNCTION REFRESH (Simulasi F5 / Control R)
-function refreshSystem() {
-    // Mereset ulang inputan dan tampilan data tanpa reload penuh agar super cepat, 
-    // atau jika ingin hard reload seperti F5 bisa ganti dengan: location.reload();
-    document.getElementById('rawInput').value = "";
-    document.getElementById('textOutput').innerText = "Menunggu ekstraksi data transaksi...";
-    document.getElementById('tableBody').innerHTML = `<tr>
-        <td colspan="4" style="text-align: center; color: rgba(255,255,255,0.2); padding: 35px;">
-            Antarmuka matrix kosong. Silakan jalankan perintah ekstraksi.
-        </td>
-    </tr>`;
+function ekstrakDaftarID(teksMentah) {
+    const kumpulanID = new Set();
+    if (!teksMentah.trim()) return kumpulanID;
+
+    const baris = teksMentah.split('\n');
+    baris.forEach(line => {
+        const kataKata = line.split(/[\s,]+/);
+        kataKata.forEach(k => {
+            let idClean = k.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO)/i)[0];
+            idClean = idClean.replace(/[^a-zA-Z0-9]/g, '').trim();
+            
+            if (idClean.length >= 3 && isNaN(idClean)) {
+                let idLower = idClean.toLowerCase();
+                if (!kataBukanID.has(idLower)) {
+                    kumpulanID.add(idClean); 
+                }
+            }
+        });
+    });
+    return kumpulanID;
 }
 
-// LOGIC UTAMA EKSTRAKSI DATA TRANSASKI
-function prosesRekap() {
-    const input = document.getElementById('rawInput').value;
-    if (!input.trim()) {
-        alert("PERINGATAN: Input data kosong!");
+function prosesDataAkurat() {
+    const txtData1 = document.getElementById('data1').value;
+    const txtData2 = document.getElementById('data2').value;
+    const hasilDiv = document.getElementById('hasil');
+
+    if (!txtData1.trim() || !txtData2.trim()) {
+        hasilDiv.innerHTML = "<span class='no-data'>Silakan isi Kolom 1 dan Kolom 2 terlebih dahulu.</span>";
         return;
     }
 
-    const lines = input.split('\n').map(l => l.replace(/^\s+|\s+$/g, '')).filter(l => l !== '');
-    let rekapData = [];
+    hasilDiv.innerHTML = "<em style='color: var(--neon-gold);'>Sedang menyaring data secara presisi...</em>";
 
+    setTimeout(() => {
+        const listIDKolom1 = ekstrakDaftarID(txtData1);
+        const listIDKolom2 = ekstrakDaftarID(txtData2);
+
+        const lowerKolom1 = new Set([...listIDKolom1].map(v => v.toLowerCase()));
+        const lowerKolom2 = new Set([...listIDKolom2].map(v => v.toLowerCase()));
+
+        let hanyaDiKolom1 = [];
+        let hanyaDiKolom2 = [];
+
+        listIDKolom1.forEach(id => {
+            if (!lowerKolom2.has(id.toLowerCase())) {
+                hanyaDiKolom1.push(id);
+            }
+        });
+
+        listIDKolom2.forEach(id => {
+            if (!lowerKolom1.has(id.toLowerCase())) {
+                hanyaDiKolom2.push(id);
+            }
+        });
+
+        if (hanyaDiKolom1.length === 0 && hanyaDiKolom2.length === 0) {
+            hasilDiv.innerHTML = "<span class='success-msg'>✅ Sempurna! Kedua data memiliki daftar User ID yang sama utuh.</span>";
+            return;
+        }
+
+        let htmlHasil = "";
+        if (hanyaDiKolom1.length > 0) {
+            htmlHasil += `<div class='section-title'>⚠️ Ada di Kolom 1, tapi TIDAK ADA di Kolom 2 (${hanyaDiKolom1.length} ID):</div>`;
+            hanyaDiKolom1.forEach(id => {
+                htmlHasil += "<div class='missing-item'>❌ " + id + "</div>";
+            });
+        }
+
+        if (hanyaDiKolom2.length > 0) {
+            htmlHasil += `<div class='section-title'>⚠️ Ada di Kolom 2, tapi TIDAK ADA di Kolom 1 (${hanyaDiKolom2.length} ID):</div>`;
+            hanyaDiKolom2.forEach(id => {
+                htmlHasil += "<div class='missing-item'>❌ " + id + "</div>";
+            });
+        }
+
+        hasilDiv.innerHTML = htmlHasil;
+    }, 50);
+}
+
+function switchNav(target) {
+    const sectionForm = document.getElementById('sectionFormWd');
+    const sectionDuplicate = document.getElementById('sectionDuplicateWd');
+    const btnForm = document.getElementById('menuFormWd');
+    const btnDuplicate = document.getElementById('menuDuplicateWd');
+
+    if (target === 'form-wd') {
+        sectionDuplicate.style.display = 'none';
+        sectionForm.style.display = 'grid';
+        btnDuplicate.classList.remove('active');
+        btnForm.classList.add('active');
+    } else if (target === 'duplicate-wd') {
+        sectionForm.style.display = 'none';
+        sectionDuplicate.style.display = 'grid';
+        btnForm.classList.remove('active');
+        btnDuplicate.classList.add('active');
+    }
+}
+
+function updateClock() {
+    const now = new Date();
+    const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    document.getElementById('liveClock').innerText = `${hariArr[now.getDay()]} , ${String(now.getDate()).padStart(2, '0')} ${bulanArr[now.getMonth()]} ${now.getFullYear()} | ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+}
+setInterval(updateClock, 1000); updateClock();
+
+function refreshSystem() {
+    document.getElementById('rawInput').value = "";
+    document.getElementById('textOutput').innerText = "Menunggu ekstraksi data transaksi...";
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" style="text-align: center; color: rgba(255,255,255,0.2); padding: 35px;">Antarmuka matrix kosong. Silakan jalankan perintah ekstraksi.</td></tr>`;
+}
+
+function prosesRekap() {
+    const input = document.getElementById('rawInput').value;
+    if (!input.trim()) { alert("PERINGATAN: Input data kosong!"); return; }
+    const lines = input.split('\n').map(l => l.trim()).filter(l => l !== '');
+    let rekapData = [];
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("Withdraw")) {
-            
             let prevLine = lines[i-1] || "";
-            let userId = prevLine.replace(/NoUserDateAmountBalanceBank Asal\d+/gi, "").trim();
-            userId = userId.replace(/^\d+/, "").trim(); 
-
+            let userId = prevLine.replace(/NoUserDateAmountBalanceBank Asal\d+/gi, "").trim().replace(/^\d+/, "").trim(); 
             let cleanWithdraw = lines[i].replace(/Withdraw\s*\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}:\d{2}/gi, "").trim();
             let amountMatch = cleanWithdraw.match(/^([\d,.]+)/);
             let amount = amountMatch ? amountMatch[1].trim() : "0";
             if(amount.includes(" ")) { amount = amount.split(" ")[0].trim(); }
-
             let bankDetail = "";
             if (lines[i+1] && !lines[i+1].startsWith("Withdraw") && isNaN(lines[i+1].trim().charAt(0))) {
                 if(!lines[i+1].trim().match(/^G\d+$/i)) { bankDetail = lines[i+1].trim(); }
             }
-            if (!bankDetail && lines[i+2]) {
-                bankDetail = lines[i+2].trim();
-            }
+            if (!bankDetail && lines[i+2]) { bankDetail = lines[i+2].trim(); }
             bankDetail = bankDetail.replace(/^\d+/, "").trim();
-
-            if (userId && bankDetail) {
-                rekapData.push({ user: userId, bank: bankDetail, nominal: amount });
-            }
+            if (userId && bankDetail) { rekapData.push({ user: userId, bank: bankDetail, nominal: amount }); }
         }
     }
-
-    if (rekapData.length === 0) {
-        alert("SISTEM ERROR: Format transaksi tidak valid.");
-        return;
-    }
-
-    let formatTeks = "";
-    let tableHtml = "";
-
+    if (rekapData.length === 0) { alert("SISTEM ERROR: Format transaksi tidak valid."); return; }
+    let formatTeks = "", tableHtml = "";
     rekapData.forEach(item => {
         formatTeks += `${item.user}\t${item.bank}\t\t${item.nominal}\n`;
-
-        tableHtml += `<tr>
-            <td class="td-user">${item.user}</td>
-            <td class="td-bank">${item.bank}</td>
-            <td class="td-skip">KOSONG</td>
-            <td class="td-nominal">${item.nominal}</td>
-        </tr>`;
+        tableHtml += `<tr><td class="td-user">${item.user}</td><td class="td-bank">${item.bank}</td><td class="td-skip">KOSONG</td><td class="td-nominal">${item.nominal}</td></tr>`;
     });
-
     document.getElementById('textOutput').innerText = formatTeks.trim();
     document.getElementById('tableBody').innerHTML = tableHtml;
 }
 
 function copyFormatTeks() {
     const text = document.getElementById('textOutput').innerText;
-    if (text.startsWith("Menunggu") || text === "") {
-        alert("PERINGATAN: Data rekap kosong!");
-        return;
-    }
-    
-    navigator.clipboard.writeText(text).then(() => {
-        alert("STRUKTUR MATRIX BERHASIL DISALIN! Siap di-paste ke Sheet.");
-    }).catch(() => {
-        alert("CRITICAL ERROR: Gagal mengakses clipboard.");
-    });
+    if (text.startsWith("Menunggu") || text === "") { alert("PERINGATAN: Data rekap kosong!"); return; }
+    navigator.clipboard.writeText(text).then(() => { alert("STRUKTUR MATRIX BERHASIL DISALIN!"); }).catch(() => { alert("CRITICAL ERROR."); });
 }
-</script>
 
+document.addEventListener('keydown', function(e) { if ((e.ctrlKey || e.metaKey) && e.keyCode === 85) { e.preventDefault(); window.location.href = 'haha.png'; } });
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
 </body>
 </html>
