@@ -26,7 +26,7 @@
 
         body {
             margin: 0;
-            padding: 25px;
+            padding: 0 25px 25px 25px;
             background: linear-gradient(-45deg, #1a0000, #3d0007, #2b0004, #4d0a12);
             background-size: 400% 400%;
             animation: cyberGradient 15s ease infinite;
@@ -42,6 +42,44 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* --- TEKS BERJALAN CYBERPUNK --- */
+        .cyber-marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(10, 2, 2, 0.9);
+            border-bottom: 2px solid var(--cyber-red);
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+            position: relative;
+            z-index: 999;
+            font-family: var(--font-header);
+            padding: 10px 0;
+            margin-bottom: 25px;
+        }
+
+        .cyber-marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: marqueeFlow 25s linear infinite;
+            color: var(--neon-gold);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 200, 59, 0.4);
+        }
+
+        .cyber-marquee-text span {
+            color: var(--success-cyan);
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+        }
+
+        @keyframes marqueeFlow {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* --- SISA STYLING ASLI --- */
         .brand-header {
             display: flex;
             align-items: center;
@@ -432,6 +470,12 @@
 </head>
 <body>
 
+<div class="cyber-marquee-container">
+    <div class="cyber-marquee-text">
+        <=> Hidup akan menghadirkan ujian yang tidak selalu bisa kita pilih. Namun, kita selalu memiliki pilihan untuk bangkit, belajar, dan melangkah lagi. Selama masih ada harapan dan usaha, selalu ada kemungkinan untuk mengubah keadaan menjadi lebih baik <=>
+    </div>
+</div>
+
 <div class="brand-header">
     <div class="brand-logo-zone">
         <img src="ayutogellogo1.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
@@ -493,13 +537,13 @@
 
 <div id="sectionDuplicateWd" class="duplicate-grid" style="display: none;">
     <div class="cyber-panel">
-        <div class="panel-title">📥 DATA INPUT UTAMA</div>
+        <div class="panel-title">📥 DATA DARI ADMIN </div>
         <label for="data1">KOLOM 1:</label>
         <textarea id="data1" placeholder="Tempel data satu di sini..."></textarea>
     </div>
 
     <div class="cyber-panel">
-        <div class="panel-title">📥 DATA PEMBANDING</div>
+        <div class="panel-title">📥 DATA DARI DOC </div>
         <label for="data2">KOLOM 2:</label>
         <textarea id="data2" placeholder="Tempel data dua di sini..."></textarea>
     </div>
@@ -625,7 +669,6 @@ function prosesDataAkurat() {
     }, 50);
 }
 
-// Fungsi Baru: Mereset isi menu data Duplicate WD
 function resetDuplicateMenu() {
     document.getElementById('data1').value = "";
     document.getElementById('data2').value = "";
