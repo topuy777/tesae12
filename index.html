@@ -579,9 +579,12 @@ function hitungDaftarID(teksMentah) {
     if (posisiJam.length === 0) {
         const kataKata = teksMentah.split(/[\s,]+/);
         kataKata.forEach(k => {
-            let idClean = k.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO)/i)[0];
+            // Ditambahkan pemisah kata TERIMA agar tidak menyatu dengan User ID
+            let idClean = k.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO|TERIMA)/i)[0];
             idClean = idClean.replace(/[^a-zA-Z0-9]/g, '').trim();
-            if (idClean.length >= 3 && isNaN(idClean)) {
+            
+            // Memastikan kata TERIMA murni tidak lolos sebagai ID
+            if (idClean.length >= 3 && isNaN(idClean) && idClean.toUpperCase() !== "TERIMA") {
                 let idLower = idClean.toLowerCase();
                 if (petaID.has(idLower)) { petaID.get(idLower).count += 1; } 
                 else { petaID.set(idLower, { originalCase: idClean, count: 1 }); }
@@ -596,7 +599,8 @@ function hitungDaftarID(teksMentah) {
         
         let blokTeks = teksMentah.substring(mulai, selesai).trim();
         let kataPertama = blokTeks.split(/[\s,]+/)[0];
-        let idClean = kataPertama.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO)/i)[0];
+        // Ditambahkan pemisah kata TERIMA agar tidak menyatu dengan User ID
+        let idClean = kataPertama.split(/(DANA|GOPAY|BCA|OVO|SEABANK|BANKJAGO|BANK|JAGO|TERIMA)/i)[0];
         
         let cekKapital = idClean.match(/([a-z0-9]+)([A-Z])/);
         if (cekKapital) {
@@ -605,7 +609,8 @@ function hitungDaftarID(teksMentah) {
 
         idClean = idClean.replace(/[^a-zA-Z0-9]/g, '').trim();
 
-        if (idClean.length >= 3 && isNaN(idClean)) {
+        // Memastikan kata TERIMA murni tidak lolos sebagai ID
+        if (idClean.length >= 3 && isNaN(idClean) && idClean.toUpperCase() !== "TERIMA") {
             let idLower = idClean.toLowerCase();
             if (petaID.has(idLower)) {
                 petaID.get(idLower).count += 1;
